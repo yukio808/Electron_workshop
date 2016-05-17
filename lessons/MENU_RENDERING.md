@@ -236,4 +236,4 @@ app.on('ready', () => {
 
 ```
 
-Great now we have a working menu with working methods. The next step is interacting with some of the API's inside of our application. We are going to create a desktop screen-capture using the desktop-capture API in electronJS.
+Great now we have a working menu with working methods. The next step is interacting with some of the API's inside of our application. We are going to create a desktop screen-capture application as seen in https://github.com/hokein/electron-sample-apps/tree/master/desktop-capture using the desktop-capture API in electronJS.
