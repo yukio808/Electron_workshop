@@ -128,7 +128,7 @@ app.on('ready', () => {
    * Handle on Close event on the window to set the mainWindow back to null;
    * 		This will remove the windows its saved states but not stop the application
    */
-   mainWindow = new BrowserWindow({ width: 800, height: 600 });
+   mainWindow = new BrowserWindow({ width: 800, height: 600, title: 'Electron Workshop'});
 
    const systemPath = 'file://';
    const initialFileOnStart = '/index.html';

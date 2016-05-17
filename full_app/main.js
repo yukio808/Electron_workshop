@@ -6,7 +6,7 @@ const BrowserWindow = electron.BrowserWindow;
 const Menu = electron.Menu;
 const app = electron.app;
 // const crashReporter = electron.crashReporter;
-
+let menu = null;
 let mainWindow = null;
 // crashReporter.start({
 //   productName: 'YourName',
@@ -65,26 +65,31 @@ const template = [
         }
       },
       {
-        label: 'Toggle Full Screen',
-        accelerator: process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11',
-        click(item, focusedWindow) {
-          if (focusedWindow) {
-            focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
+        label: 'Developer',
+        submenu: [
+          {
+            label: 'Toggle Full Screen',
+            accelerator: process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11',
+            click(item, focusedWindow) {
+              if (focusedWindow) {
+                focusedWindow.setFullScreen(!focusedWindow.isFullScreen());
+              }
+            }
+          },
+          // development implementation only remove from distributed application
+          {
+            label: 'Toggle Developer Tools',
+            accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+            click(item, focusedWindow) {
+              if (focusedWindow) {
+                focusedWindow.webContents.toggleDevTools();
+              }
+            },
           }
-        }
-      },
-      // development implementation only
-      {
-        label: 'Toggle Developer Tools',
-        accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-        click(item, focusedWindow) {
-          if (focusedWindow) {
-            focusedWindow.webContents.toggleDevTools();
-          }
-        }
+        ]
       },
     ]
-  },
+  }, // end of view menu section
   {
     label: 'Window',
     role: 'window',
@@ -175,7 +180,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('ready', () => {
-  mainWindow = new BrowserWindow({ width: 800, height: 600 });
+  mainWindow = new BrowserWindow({ width: 800, height: 600, title: 'Electron Workshop' });
   const systemPath = 'file://';
   const index = '/index.html';
 
@@ -185,9 +190,11 @@ app.on('ready', () => {
     mainWindow = null;
   });
 
-  // Handle Menu code here
-  const menu = Menu.buildFromTemplate(template);
-  Menu.setApplicationMenu(menu);
+  // Handle Menu code here and only run when menu is not built
+  if (menu === null) {
+    menu = Menu.buildFromTemplate(template);
+    Menu.setApplicationMenu(menu);
+  }
 });
 
 app.on('activate', () => {
@@ -203,7 +210,7 @@ app.on('activate', () => {
     });
 
     // Handle Menu code here
-    const menu = Menu.buildFromTemplate(template);
+    menu = Menu.buildFromTemplate(template);
     Menu.setApplicationMenu(menu);
   }
 });
