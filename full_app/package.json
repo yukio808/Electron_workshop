@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/n/A/issues"
   },
-  "homepage": "https://github.com/n/A#readme"
+  "homepage": "https://github.com/n/A#readme",
+  "dependencies": {
+    "jquery": "^2.2.3"
+  }
 }
