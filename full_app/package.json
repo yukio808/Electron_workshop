@@ -3,13 +3,6 @@
   "version": "0.0.1",
   "description": "Using 2 JSON structure for deployment of application; This file for dependancies to be distributed with app.",
   "main": "main.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/n/A.git"
-  },
   "keywords": [
     "Distribution",
     "electron",
@@ -17,12 +10,5 @@
     "tutorial"
   ],
   "author": "Yukio Yamamoto",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/n/A/issues"
-  },
-  "homepage": "https://github.com/n/A#readme",
-  "dependencies": {
-    "jquery": "^2.2.3"
-  }
+  "license": "MIT"
 }

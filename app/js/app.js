@@ -16,6 +16,7 @@
 
 window.$ = window.jQuery = require('./js/jquery.js');
 require('./js/image-picker.js');
+
 const electron = require('electron');
 const desktopCapturer = electron.desktopCapturer;
 
