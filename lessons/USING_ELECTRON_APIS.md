@@ -84,4 +84,93 @@ To start the application Replace the contents of the index.html file with the fo
 </html>
 ```
 
-Now that you are able too see the application in action lets go ahead and get aquainted with the process thats happenig here.
+Now that you are able too see the application in action lets go ahead and get acquainted with the process thats happening here.
+
+In out app.js file we are using jQuery and image-picker jQuery extension with our getUserMedia api. As soon as the document is loaded we gather a list of resources/windows open to use in our application.
+
+```javascript
+function addSource(source) {
+  $('select').append($('<option>', {
+    value: source.id.replace(":", ""),
+    text: source.name
+  }));
+  $('select option[value="' + source.id.replace(":", "") + '"]')
+    .attr('data-img-src', source.thumbnail.toDataUrl());
+  refresh();
+}
+
+function showSources() {
+  desktopCapturer.getSources({ types:['window', 'screen'] }, function(error, sources) {
+    for (var i = 0; i < sources.length; ++i) {
+      console.log("Name: " + sources[i].name, sources[i]);
+      addSource(sources[i]);
+    }
+  });
+}
+```
+
+These two functions provide the resources to give our application its content. So when you look on the app you see a bunch of pictures of all the windows you currently have open.
+
+Now when we select one of these pictures and click on the capture button it fires off an event that gets access to the computers sources to get the window in question (`onAccessApproved`).
+
+```javascript
+function toggle() {
+  if (!desktopSharing) {
+    var id = ($('select').val()).replace(/window|screen/g, function(match) { return match + ":"; });
+    onAccessApproved(id);
+  } else {
+    desktopSharing = false;
+
+    if (localStream)
+      localStream.getTracks()[0].stop();
+    localStream = null;
+
+    document.querySelector('button').innerHTML = "Enable Capture";
+
+    $('select').empty();
+    showSources();
+    refresh();
+  }
+}
+
+function onAccessApproved(desktop_id) {
+  if (!desktop_id) {
+    console.log('Desktop Capture access rejected.');
+    return;
+  }
+  desktopSharing = true;
+  document.querySelector('button').innerHTML = "Disable Capture";
+  console.log("Desktop sharing started.. desktop_id:" + desktop_id);
+  navigator.webkitGetUserMedia({
+    audio: false,
+    video: {
+      mandatory: {
+        chromeMediaSource: 'desktop',
+        chromeMediaSourceId: desktop_id,
+        minWidth: 1280,
+        maxWidth: 1280,
+        minHeight: 720,
+        maxHeight: 720
+      }
+    }
+  }, gotStream, getUserMediaError);
+
+  function gotStream(stream) {
+    localStream = stream;
+    document.querySelector('video').src = URL.createObjectURL(stream);
+    stream.onended = function() {
+      if (desktopSharing) {
+        toggle();
+      }
+    };
+  }
+
+  function getUserMediaError(e) {
+    console.log('getUserMediaError: ' + JSON.stringify(e, null, '---'));
+  }
+}
+```
+
+It is at this point in the `onAccessApproved` function that we start using the getUserMedia Api in full force. The getUserMedia api is sending us a stream of the window we selected an showing it in the video potion of our html in the application.
+
+And thats it. Now that we have a working application, lets move along and build out the application to be distributed to our users. 
